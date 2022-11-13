@@ -21,12 +21,13 @@ class CitiesListSuccessful extends StatelessWidget {
               onItemClicked.call(city);
             },
             child: Text(
-              'City: $city',
-              style: theme.textTheme.headline5,
+              city,
+              style: theme.textTheme.titleMedium,
             ),
         );
       },
-      separatorBuilder: (_, __) => const Divider(),
+      padding: const EdgeInsets.all(32),
+      separatorBuilder: (_, __) => const Divider(height: 24),
       itemCount: citiesList.length,
     );
 

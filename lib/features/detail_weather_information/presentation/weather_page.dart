@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/features/detail_weather_information/data/weather_repository.dart';
 import 'package:weather/features/detail_weather_information/presentation/cubit/weather_cubit.dart';
+import 'package:weather/features/detail_weather_information/presentation/theme_cubit.dart';
 import 'package:weather/features/detail_weather_information/presentation/widgets/widgets.dart';
 
 class WeatherPage extends StatelessWidget {
@@ -46,9 +47,9 @@ class _WeatherViewState extends State<WeatherView> {
       body: Center(
         child: BlocConsumer<WeatherCubit, WeatherState>(
           listener: (context, state) {
-            // if (state.status.isSuccess) {
-            //   context.read<ThemeCubit>().updateTheme(state.weather);
-            // }
+            if (state.status.isSuccess) {
+              context.read<ThemeCubit>().updateTheme(state.weather);
+            }
           },
           builder: (context, state) {
             switch (state.status) {
@@ -57,9 +58,8 @@ class _WeatherViewState extends State<WeatherView> {
               case WeatherStatus.loading:
                 return const WeatherLoading();
               case WeatherStatus.success:
-                return WeatherPopulated(
+                return WeatherSuccessful(
                   weather: state.weather,
-                  units: state.temperatureUnits,
                   onRefresh: () {
                     return context.read<WeatherCubit>().refreshWeather();
                   },

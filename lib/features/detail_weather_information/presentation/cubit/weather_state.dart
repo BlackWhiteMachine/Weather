@@ -12,26 +12,22 @@ extension WeatherStatusX on WeatherStatus {
 class WeatherState extends Equatable {
   WeatherState({
     this.status = WeatherStatus.initial,
-    this.temperatureUnits = TemperatureUnits.celsius,
     WeatherViewState? weather,
   }) : weather = weather ?? WeatherViewState.empty;
 
   final WeatherStatus status;
   final WeatherViewState weather;
-  final TemperatureUnits temperatureUnits;
 
   WeatherState copyWith({
     WeatherStatus? status,
-    TemperatureUnits? temperatureUnits,
     WeatherViewState? weather,
   }) {
     return WeatherState(
       status: status ?? this.status,
-      temperatureUnits: temperatureUnits ?? this.temperatureUnits,
       weather: weather ?? this.weather,
     );
   }
 
   @override
-  List<Object?> get props => [status, temperatureUnits, weather];
+  List<Object?> get props => [status, weather];
 }

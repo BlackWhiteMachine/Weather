@@ -37,15 +37,11 @@ class _CitiesListViewState extends State<CitiesListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choice city'),
+        title: const Text('Choose city'),
       ),
       body: Center(
         child: BlocConsumer<CitiesListCubit, CitiesListState>(
-          listener: (context, state) {
-            // if (state.status.isSuccess) {
-            //   context.read<ThemeCubit>().updateTheme(state.weather);
-            // }
-          },
+          listener: (context, state) {},
           builder: (context, state) {
             switch (state.status) {
               case CitiesListStatus.initial:

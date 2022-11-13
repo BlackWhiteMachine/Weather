@@ -1,28 +1,53 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:weather/core/data/open_meteo_api_client.dart';
+import 'package:weather/features/detail_weather_information/data/database_helper.dart';
 import 'package:weather/features/detail_weather_information/domain/model/weather.dart';
 
 class WeatherRepository {
   WeatherRepository({OpenMeteoApiClient? weatherApiClient})
-      : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient();
+      : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient(),
+        _databaseHelper = DatabaseHelper.instance;
 
   final OpenMeteoApiClient _weatherApiClient;
+  final DatabaseHelper _databaseHelper;
 
-  Future<Weather> getWeather(String city) async {
-    final location = await _weatherApiClient.locationSearch(city);
-    final weather = await _weatherApiClient.getWeather(
+  Stream<Weather> getWeather(String cityName) async* {
+    final cachedWeather = await _getWeatherFromDatabase(cityName);
+    if (cachedWeather != null) {
+      yield cachedWeather;
+    }
+
+    try {
+      final weather = await _getWeatherFromRemote(cityName);
+
+      yield weather;
+
+      _databaseHelper.insert(cityName, weather);
+    } catch (error) {
+      if (cachedWeather == null) {
+        throw error;
+      }
+    }
+  }
+
+  Future<Weather> _getWeatherFromRemote(String cityName) async {
+    final location = await _weatherApiClient.locationSearch(cityName);
+    final weatherResponse = await _weatherApiClient.getWeather(
       latitude: location.latitude,
       longitude: location.longitude,
     );
 
-    log('WeatherRepository: weather: $weather');
-
     return Weather(
-      temperature: weather.temperature,
+      temperature: weatherResponse.temperature,
       location: location.name,
-      condition: weather.weatherCode.toInt().toCondition,
+      condition: weatherResponse.weatherCode.toInt().toCondition,
     );
+  }
+
+  Future<Weather?> _getWeatherFromDatabase(String cityName) async {
+    final cachedWeather = await _databaseHelper.select(cityName);
+    return cachedWeather;
   }
 }
 

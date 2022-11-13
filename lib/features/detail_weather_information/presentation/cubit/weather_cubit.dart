@@ -10,83 +10,33 @@ class WeatherCubit extends Cubit<WeatherState> {
 
   final WeatherRepository _weatherRepository;
 
-  Future<void> fetchWeather(String? city) async {
-    if (city == null || city.isEmpty) return;
+  Future<void> fetchWeather(String? cityName) async {
+    if (cityName == null || cityName.isEmpty) return;
 
-    emit(state.copyWith(status: WeatherStatus.loading));
-
-    try {
-      final weather = WeatherViewState.fromRepository(
-        await _weatherRepository.getWeather(city),
-      );
-      final units = state.temperatureUnits;
-      final value = units.isFahrenheit
-          ? weather.temperature.value.toFahrenheit()
-          : weather.temperature.value;
-
-      emit(
-        state.copyWith(
-          status: WeatherStatus.success,
-          temperatureUnits: units,
-          weather: weather.copyWith(temperature: Temperature(value: value)),
-        ),
-      );
-    } on Exception {
-      emit(state.copyWith(status: WeatherStatus.failure));
-    }
+    _obtainWeather(cityName);
   }
 
   Future<void> refreshWeather() async {
     if (!state.status.isSuccess) return;
     if (state.weather == WeatherViewState.empty) return;
-    try {
-      final weather = WeatherViewState.fromRepository(
-        await _weatherRepository.getWeather(state.weather.location),
-      );
-      final units = state.temperatureUnits;
-      final value = units.isFahrenheit
-          ? weather.temperature.value.toFahrenheit()
-          : weather.temperature.value;
 
-      emit(
-        state.copyWith(
-          status: WeatherStatus.success,
-          temperatureUnits: units,
-          weather: weather.copyWith(temperature: Temperature(value: value)),
-        ),
-      );
-    } on Exception {
-      emit(state);
-    }
+    _obtainWeather(state.weather.location);
   }
 
-  void toggleUnits() {
-    final units = state.temperatureUnits.isFahrenheit
-        ? TemperatureUnits.celsius
-        : TemperatureUnits.fahrenheit;
+  Future<void> _obtainWeather(String cityName) async {
+    emit(state.copyWith(status: WeatherStatus.loading));
 
-    if (!state.status.isSuccess) {
-      emit(state.copyWith(temperatureUnits: units));
-      return;
-    }
-
-    final weather = state.weather;
-    if (weather != WeatherViewState.empty) {
-      final temperature = weather.temperature;
-      final value = units.isCelsius
-          ? temperature.value.toCelsius()
-          : temperature.value.toFahrenheit();
-      emit(
-        state.copyWith(
-          temperatureUnits: units,
-          weather: weather.copyWith(temperature: Temperature(value: value)),
-        ),
-      );
-    }
+    _weatherRepository.getWeather(cityName)
+        .handleError((onError) {
+          emit(state.copyWith(status: WeatherStatus.failure));
+        }).listen((weather) {
+          final weatherViewState = WeatherViewState.fromRepository(weather);
+          emit(
+            state.copyWith(
+              status: WeatherStatus.success,
+              weather: weatherViewState,
+            ),
+          );
+        });
   }
-}
-
-extension on double {
-  double toFahrenheit() => (this * 9 / 5) + 32;
-  double toCelsius() => (this - 32) * 5 / 9;
 }
