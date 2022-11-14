@@ -23,7 +23,11 @@ class WeatherRepository {
 
       yield weather;
 
-      _databaseHelper.insert(cityName, weather);
+      if (cachedWeather == null) {
+        _databaseHelper.insert(cityName, weather);
+      } else {
+        _databaseHelper.update(cityName, weather);
+      }
     } catch (error) {
       if (cachedWeather == null) {
         throw error;
