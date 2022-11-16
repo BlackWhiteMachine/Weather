@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/features/detail_weather_information/data/weather_repository.dart';
@@ -28,6 +30,7 @@ class WeatherCubit extends Cubit<WeatherState> {
 
     _weatherRepository.getWeather(cityName)
         .handleError((onError) {
+          log('WeatherCubit: onError: $onError');
           emit(state.copyWith(status: WeatherStatus.failure));
         }).listen((weather) {
           final weatherViewState = WeatherViewState.fromRepository(weather);

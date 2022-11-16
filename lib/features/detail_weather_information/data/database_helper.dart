@@ -59,7 +59,7 @@ class DatabaseHelper {
   Future<int> update(String cityName, Weather weather) async {
     final row = {
       DatabaseHelper.columnName : cityName,
-      DatabaseHelper.columnData : weather.toJson()
+      DatabaseHelper.columnData :jsonEncode(weather.toJson())
     };
     Database db = await instance.database;
     return await db.update(table, row);
@@ -75,7 +75,6 @@ class DatabaseHelper {
       final firstCount = count.first;
       final data = firstCount[columnData] as String;
       final jsonData = jsonDecode(data);
-      final weather = Weather.fromJson(jsonData);
       return Weather.fromJson(jsonData);
     }
   }
