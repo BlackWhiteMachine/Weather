@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/features/cities_list/data/cities_list_repository.dart';
 import 'package:weather/features/cities_list/presentation/cubit/cities_list_cubit.dart';
+import 'package:weather/features/cities_list/presentation/model/cities_list_state.dart';
 import 'package:weather/features/cities_list/presentation/widgets/widgets.dart';
-import 'package:weather/features/detail_weather_information/presentation/cubit/weather_cubit.dart';
 import 'package:weather/features/detail_weather_information/presentation/weather_page.dart';
 
 class CitiesListPage extends StatelessWidget {

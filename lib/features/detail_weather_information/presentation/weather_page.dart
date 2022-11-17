@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/features/detail_weather_information/domain/weather_repository.dart';
 import 'package:weather/features/detail_weather_information/presentation/cubit/weather_cubit.dart';
+import 'package:weather/features/detail_weather_information/presentation/model/weather_state.dart';
 import 'package:weather/features/detail_weather_information/presentation/theme_cubit.dart';
 import 'package:weather/features/detail_weather_information/presentation/widgets/widgets.dart';
 

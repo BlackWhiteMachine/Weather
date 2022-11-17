@@ -1,4 +1,6 @@
-part of 'weather_cubit.dart';
+import 'package:equatable/equatable.dart';
+
+import 'package:weather/features/detail_weather_information/presentation/model/weather_view_state.dart';
 
 enum WeatherStatus { initial, loading, success, failure }
 

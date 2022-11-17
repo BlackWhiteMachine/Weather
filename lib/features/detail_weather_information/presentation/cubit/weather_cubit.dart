@@ -1,11 +1,9 @@
 import 'dart:developer';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/features/detail_weather_information/domain/weather_repository.dart';
+import 'package:weather/features/detail_weather_information/presentation/model/weather_state.dart';
 import 'package:weather/features/detail_weather_information/presentation/model/weather_view_state.dart';
-
-part 'weather_state.dart';
 
 class WeatherCubit extends Cubit<WeatherState> {
   WeatherCubit(this._weatherRepository) : super(WeatherState());

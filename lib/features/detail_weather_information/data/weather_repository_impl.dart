@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:weather/core/data/open_meteo_api_client.dart';
 import 'package:weather/features/detail_weather_information/data/database_helper.dart';
+import 'package:weather/features/detail_weather_information/data/service/weather_service.dart';
 import 'package:weather/features/detail_weather_information/domain/weather_repository.dart';
 import 'package:weather/features/detail_weather_information/domain/model/weather.dart';
 
 class WeatherRepositoryImpl implements WeatherRepository {
-  WeatherRepositoryImpl({OpenMeteoApiClient? weatherApiClient})
-      : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient(),
+  WeatherRepositoryImpl({WeatherService? weatherService})
+      : _weatherService = weatherService ?? WeatherService(),
         _databaseHelper = DatabaseHelper.instance;
 
-  final OpenMeteoApiClient _weatherApiClient;
+  final WeatherService _weatherService;
   final DatabaseHelper _databaseHelper;
 
   @override
@@ -38,8 +38,8 @@ class WeatherRepositoryImpl implements WeatherRepository {
   }
 
   Future<Weather> _getWeatherFromRemote(String cityName) async {
-    final location = await _weatherApiClient.locationSearch(cityName);
-    final weatherResponse = await _weatherApiClient.getWeather(
+    final location = await _weatherService.locationSearch(cityName);
+    final weatherResponse = await _weatherService.getWeather(
       latitude: location.latitude,
       longitude: location.longitude,
     );

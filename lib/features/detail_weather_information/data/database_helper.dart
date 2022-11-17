@@ -28,7 +28,7 @@ class DatabaseHelper {
 
   _initDatabase() async {
     var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, '_databaseName');
+    String path = join(databasesPath, _databaseName);
     return await openDatabase(
         path,
         version: _databaseVersion,

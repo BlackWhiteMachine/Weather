@@ -1,4 +1,4 @@
-part of 'cities_list_cubit.dart';
+import 'package:equatable/equatable.dart';
 
 enum CitiesListStatus { initial, loading, success, failure }
 

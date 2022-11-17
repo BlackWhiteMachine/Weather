@@ -2,23 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:weather/core/data/model/weather_response.dart';
-import 'package:weather/core/data/model/location_response.dart';
-
-/// Exception thrown when the provided location is not found.
-class LocationNotFoundFailure implements Exception {}
 
 /// Exception thrown when getWeather fails.
 class RequestFailure implements Exception {}
 
-/// Exception thrown when weather for provided location is not found.
-class WeatherNotFoundFailure implements Exception {}
-
-/// {@template open_meteo_api_client}
-/// Dart API Client which wraps the [Open Meteo API](https://open-meteo.com).
-/// {@endtemplate}
 class OpenMeteoApiClient {
-  /// {@macro open_meteo_api_client}
   OpenMeteoApiClient({http.Client? httpClient})
       : _httpClient = httpClient ?? http.Client();
 
@@ -27,56 +15,33 @@ class OpenMeteoApiClient {
 
   final http.Client _httpClient;
 
-  /// Finds a [LocationResponse] `/v1/search/?name=(query)`.
-  Future<LocationResponse> locationSearch(String query) async {
-    final locationRequest = Uri.https(
-      _baseUrlGeocoding,
-      '/v1/search',
-      {'name': query, 'count': '1'},
-    );
+  Future<Map<dynamic, dynamic>> geocodingRequest(
+      String path,
+      Map<String, dynamic>? queryParameters
+      ) async {
+    final request = Uri.https(_baseUrlGeocoding, path, queryParameters,);
 
-    final locationResponse = await _httpClient.get(locationRequest);
+    final locationResponse = await _httpClient.get(request);
 
     if (locationResponse.statusCode != 200) {
       throw RequestFailure();
     }
 
-    final locationJson = jsonDecode(locationResponse.body) as Map;
-
-    if (!locationJson.containsKey('results')) throw LocationNotFoundFailure();
-
-    final results = locationJson['results'] as List;
-
-    if (results.isEmpty) throw LocationNotFoundFailure();
-
-    return LocationResponse.fromJson(results.first as Map<String, dynamic>);
+    return jsonDecode(locationResponse.body) as Map;
   }
 
-  /// Fetches [Weather] for a given [latitude] and [longitude].
-  Future<WeatherResponse> getWeather({
-    required double latitude,
-    required double longitude,
-  }) async {
-    final weatherRequest = Uri.https(_baseUrlWeather, 'v1/forecast', {
-      'latitude': '$latitude',
-      'longitude': '$longitude',
-      'current_weather': 'true'
-    });
+  Future<Map<String, dynamic>> weatherRequest(
+    String path,
+    Map<String, dynamic>? queryParameters
+  ) async {
+    final request = Uri.https(_baseUrlWeather, path, queryParameters);
 
-    final weatherResponse = await _httpClient.get(weatherRequest);
+    final weatherResponse = await _httpClient.get(request);
 
     if (weatherResponse.statusCode != 200) {
       throw RequestFailure();
     }
 
-    final bodyJson = jsonDecode(weatherResponse.body) as Map<String, dynamic>;
-
-    if (!bodyJson.containsKey('current_weather')) {
-      throw WeatherNotFoundFailure();
-    }
-
-    final weatherJson = bodyJson['current_weather'] as Map<String, dynamic>;
-
-    return WeatherResponse.fromJson(weatherJson);
+    return jsonDecode(weatherResponse.body) as Map<String, dynamic>;
   }
 }
