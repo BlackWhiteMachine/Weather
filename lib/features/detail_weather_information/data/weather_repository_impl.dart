@@ -2,16 +2,18 @@ import 'dart:async';
 
 import 'package:weather/core/data/open_meteo_api_client.dart';
 import 'package:weather/features/detail_weather_information/data/database_helper.dart';
+import 'package:weather/features/detail_weather_information/domain/weather_repository.dart';
 import 'package:weather/features/detail_weather_information/domain/model/weather.dart';
 
-class WeatherRepository {
-  WeatherRepository({OpenMeteoApiClient? weatherApiClient})
+class WeatherRepositoryImpl implements WeatherRepository {
+  WeatherRepositoryImpl({OpenMeteoApiClient? weatherApiClient})
       : _weatherApiClient = weatherApiClient ?? OpenMeteoApiClient(),
         _databaseHelper = DatabaseHelper.instance;
 
   final OpenMeteoApiClient _weatherApiClient;
   final DatabaseHelper _databaseHelper;
 
+  @override
   Stream<Weather> getWeather(String cityName) async* {
     final cachedWeather = await _getWeatherFromDatabase(cityName);
     if (cachedWeather != null) {

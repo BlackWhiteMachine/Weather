@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/features/cities_list/presentation/cities_list_page.dart';
-import 'package:weather/features/detail_weather_information/data/weather_repository.dart';
+import 'package:weather/features/detail_weather_information/domain/weather_repository.dart';
 import 'package:weather/features/detail_weather_information/presentation/theme_cubit.dart';
 
 class WeatherApp extends StatelessWidget {
