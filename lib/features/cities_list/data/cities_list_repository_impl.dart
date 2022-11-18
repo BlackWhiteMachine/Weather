@@ -1,5 +1,8 @@
-class CitiesListRepository {
+import 'package:weather/features/cities_list/domain/cities_list_repository.dart';
 
+class CitiesListRepositoryImpl implements CitiesListRepository {
+
+  @override
   Future<List<String>> getCities() async {
     await Future.delayed(const Duration(seconds: 2));
     return _citiesList;

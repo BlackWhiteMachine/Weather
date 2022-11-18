@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather/features/cities_list/data/cities_list_repository.dart';
+import 'package:weather/features/cities_list/domain/cities_list_repository.dart';
 import 'package:weather/features/cities_list/presentation/model/cities_list_state.dart';
 
 class CitiesListCubit extends Cubit<CitiesListState> {

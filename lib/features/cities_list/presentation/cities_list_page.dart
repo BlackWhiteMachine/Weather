@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather/features/cities_list/data/cities_list_repository.dart';
+import 'package:weather/features/cities_list/data/cities_list_repository_impl.dart';
 import 'package:weather/features/cities_list/presentation/cubit/cities_list_cubit.dart';
 import 'package:weather/features/cities_list/presentation/model/cities_list_state.dart';
 import 'package:weather/features/cities_list/presentation/widgets/widgets.dart';
@@ -14,7 +14,7 @@ class CitiesListPage extends StatelessWidget {
     return BlocProvider(
     //  create: (context) => CitiesListCubit(context.read<CitiesListRepository>()),
       create: (context) {
-        final cubit = CitiesListCubit(CitiesListRepository());
+        final cubit = CitiesListCubit(CitiesListRepositoryImpl());
         cubit.init();
         return cubit;
       },
